@@ -1,0 +1,25 @@
+#!/bin/bash
+# turnkey-linux/pbs plan/main
+
+set -e
+
+echo "Configuring Debian and Proxmox Backup Server repositories..."
+
+# Copy Proxmox Backup Server source list
+cp /turnkey/fab/products/pbs/conf/sources.list.d/pbs.list /etc/apt/sources.list.d/
+
+# Copy Proxmox GPG key
+cp /turnkey/fab/products/pbs/overlays/etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg /etc/apt/trusted.gpg.d/
+
+# Update packages and install Proxmox Backup Server
+echo "Updating package lists and installing Proxmox Backup Server..."
+apt update
+apt upgrade -y
+apt install -y proxmox-backup
+
+# Completion message
+cat <<EOM
+
+Installation complete! Access your Proxmox Backup Server at:
+https://{container_ip}:8007
+EOM
